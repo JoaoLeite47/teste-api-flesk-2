@@ -28,7 +28,7 @@ def dev(id):
         return jsonify({"status": "ok"})
 
 
-@app.route('/dev/', methods=['POST'])
+@app.route('/dev/', methods=['POST', 'GET'])
 def NewDevList():
     if request.method == 'POST':
         dados = json.loads(request.data)
@@ -36,6 +36,8 @@ def NewDevList():
         dados['id'] = position
         DevList.append(dados)
         return jsonify(DevList[position])
+    elif request.method == 'GET':
+        return jsonify(DevList)
 
 
 if __name__ == '__main__':
