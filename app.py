@@ -3,9 +3,9 @@ import json
 app = Flask(__name__)
 
 DevList = [
-    {"name": "João", "hability": ["Python", "Flask"]},
-    {"name": "Maria", "hability": ["Python", "Django"]},
-    {"name": "Pedro", "hability": ["Python", "Django"]},
+    {"id": 0, "name": "João", "hability": ["Python", "Flask"]},
+    {"id": 1, "name": "Maria", "hability": ["Python", "Django"]},
+    {"id": 2, "name": "Pedro", "hability": ["Python", "Django"]},
 ]
 
 
@@ -16,7 +16,9 @@ def dev(id):
             res = DevList[id]
         except IndexError:
             res = {'status': 'error', 'message': 'Dev not found'}
-            return jsonify(res)
+        except Exception:
+            res = {'status': 'error', 'message': 'Unexpected error'}
+        return jsonify(res)
     elif request.method == 'PUT':
         dados = json.loads(request.data)
         DevList[id] = dados
@@ -24,6 +26,16 @@ def dev(id):
     elif request.method == 'DELETE':
         DevList.pop(id)
         return jsonify({"status": "ok"})
+
+
+@app.route('/dev/', methods=['POST'])
+def NewDevList():
+    if request.method == 'POST':
+        dados = json.loads(request.data)
+        position = len(DevList)
+        dados['id'] = position
+        DevList.append(dados)
+        return jsonify(DevList[position])
 
 
 if __name__ == '__main__':
