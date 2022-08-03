@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
-
+from flask import Flask, jsonify, request
+import json
 app = Flask(__name__)
 
 DevList = [
@@ -9,10 +9,15 @@ DevList = [
 ]
 
 
-@app.route('/dev/<int:id>/')
+@app.route('/dev/<int:id>/', methods=['GET', 'PUT'])
 def dev(id):
-    dev = DevList[id]
-    return jsonify(dev)
+    if request.method == 'GET':
+        dev = DevList[id]
+        return jsonify(dev)
+    elif request.method == 'PUT':
+        dados = json.loads(request.data)
+        DevList[id] = dados
+        return jsonify(dados)
 
 
 if __name__ == '__main__':
